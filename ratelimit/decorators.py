@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from functools import wraps
-
+import logging
 from django.http import HttpRequest
 
 from ratelimit import ALL, UNSAFE
@@ -26,6 +26,7 @@ def ratelimit(group=None, key=None, rate=None, method=ALL, block=False):
                                          key=key, rate=rate, method=method,
                                          increment=True)
             if ratelimited and block:
+                 logging.warn("url:<%s> is denied for <%s> in Ratelimit"%(request.path, request.META['REMOTE_ADDR']))
                 raise Ratelimited()
             return fn(*args, **kw)
         return _wrapped
