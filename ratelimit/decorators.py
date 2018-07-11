@@ -19,6 +19,8 @@ def ratelimit(group=None, key=None, rate=None, method=ALL, block=False):
             # Work as a CBV method decorator.
             if isinstance(args[0], HttpRequest):
                 request = args[0]
+            elif args[1].context and isinstance(args[1].context, HttpRequest):
+                request = args[1].context
             else:
                 request = args[1]
             request.limited = getattr(request, 'limited', False)
